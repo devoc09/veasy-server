@@ -5,11 +5,21 @@ import (
 	"net/http"
 )
 
-func main() {
-    http.HandleFunc("/a", handler)
-    http.ListenAndServe(":8080", nil)
+func hello(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "hello!")
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprint(w, "Hello World from Go.\n")
+func world(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "world!")
+}
+
+func main() {
+    server := http.Server{
+        Addr: "127.0.0.1:8080",
+    }
+
+    http.HandleFunc("/hello", hello)
+    http.HandleFunc("/world", world)
+
+    server.ListenAndServeTLS("ssl/dev/server.crt", "ssl/dev/server.key")
 }
